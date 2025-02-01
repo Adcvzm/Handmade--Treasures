@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - Handmade Treasures</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>Handmade Treasures</h1>
+            </div>
+            <div class="nav-links">
+                <span id="userDisplayName">🏪 Seller</span>
+                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="admin-content">
+        <div class="admin-header">
+            <h2>Seller Dashboard</h2>
+        </div>
+
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <i class="fas fa-box"></i>
+                <h3>Total Products</h3>
+                <p id="totalProducts">0</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Total Orders</h3>
+                <p id="totalOrders">0</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-rupee-sign"></i>
+                <h3>Total Revenue</h3>
+                <p id="totalRevenue">₹0</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star"></i>
+                <h3>Rating</h3>
+                <p id="sellerRating">4.5</p>
+            </div>
+        </div>
+
+        <div class="seller-sections">
+            <div class="section-header">
+                <h3>My Products</h3>
+                <button class="add-btn" onclick="showAddProductModal()">
+                    <i class="fas fa-plus"></i> Add New Product
+                </button>
+            </div>
+
+            <div class="search-filter">
+                <input type="text" id="searchProducts" placeholder="Search products...">
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="pottery">Pottery</option>
+                    <option value="textiles">Textiles</option>
+                    <option value="jewelry">Jewelry</option>
+                    <option value="woodwork">Woodwork</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Products will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="seller-sections">
+            <div class="section-header">
+                <h3>Recent Orders</h3>
+            </div>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Orders will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Add New Product</h2>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <input type="text" id="productName" placeholder="Product Name" required>
+                <select id="productCategory" required>
+                    <option value="">Select Category</option>
+                    <option value="pottery">Pottery</option>
+                    <option value="textiles">Textiles</option>
+                    <option value="jewelry">Jewelry</option>
+                    <option value="woodwork">Woodwork</option>
+                </select>
+                <input type="number" id="productPrice" placeholder="Price" required>
+                <input type="number" id="productStock" placeholder="Stock Quantity" required>
+                <input type="text" id="productImage" placeholder="Image URL" required>
+                <textarea id="productDescription" placeholder="Description" required></textarea>
+                <button type="submit">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Handmade Treasures. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample data
+        let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts')) || [];
+        let sellerOrders = JSON.parse(localStorage.getItem('sellerOrders')) || [];
+
+        // Update dashboard stats
+        function updateStats() {
+            document.getElementById('totalProducts').textContent = sellerProducts.length;
+            document.getElementById('totalOrders').textContent = sellerOrders.length;
+            const revenue = sellerOrders.reduce((sum, order) => sum + order.amount, 0);
+            document.getElementById('totalRevenue').textContent = `₹${revenue.toLocaleString('en-IN')}`;
+        }
+
+        // Render products table
+        function renderProducts() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = '';
+
+            sellerProducts.forEach(product => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${product.image}" alt="${product.name}" class="product-thumbnail"></td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>₹${product.price.toLocaleString('en-IN')}</td>
+                    <td>${product.stock}</td>
+                    <td><span class="status-badge ${product.stock > 0 ? 'active' : 'inactive'}">
+                        ${product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                    </span></td>
+                    <td>
+                        <button onclick="editProduct(${product.id})" class="edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteProduct(${product.id})" class="delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Show add product modal
+        function showAddProductModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Product';
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('productModal').style.display = 'block';
+        }
+
+        // Edit product
+        function editProduct(id) {
+            const product = sellerProducts.find(p => p.id === id);
+            if (product) {
+                document.getElementById('modalTitle').textContent = 'Edit Product';
+                document.getElementById('productId').value = product.id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productStock').value = product.stock;
+                document.getElementById('productImage').value = product.image;
+                document.getElementById('productDescription').value = product.description;
+                document.getElementById('productModal').style.display = 'block';
+            }
+        }
+
+        // Delete product
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                sellerProducts = sellerProducts.filter(p => p.id !== id);
+                localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+                renderProducts();
+                updateStats();
+            }
+        }
+
+        // Form submission
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = {
+                id: document.getElementById('productId').value || Date.now(),
+                name: document.getElementById('productName').value,
+                category: document.getElementById('productCategory').value,
+                price: Number(document.getElementById('productPrice').value),
+                stock: Number(document.getElementById('productStock').value),
+                image: document.getElementById('productImage').value,
+                description: document.getElementById('productDescription').value
+            };
+
+            if (formData.id) {
+                sellerProducts = sellerProducts.map(p => p.id === formData.id ? formData : p);
+            } else {
+                sellerProducts.push(formData);
+            }
+
+            localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+            document.getElementById('productModal').style.display = 'none';
+            renderProducts();
+            updateStats();
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = '../../index.html';
+        });
+
+        // Close modal functionality
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+
+        // Initialize
+        updateStats();
+        renderProducts();
+    </script>
+</body>
+</html> 

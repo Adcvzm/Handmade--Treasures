@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders - Handmade Treasures</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>Handmade Treasures</h1>
+            </div>
+            <div class="nav-links">
+                <a href="./dashboard.html">Dashboard</a>
+                <span id="userDisplayName">👑 Admin</span>
+                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="admin-content">
+        <div class="admin-header">
+            <h2>Manage Orders</h2>
+        </div>
+
+        <div class="search-filter">
+            <input type="text" id="searchOrders" placeholder="Search orders...">
+            <select id="statusFilter">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Products</th>
+                        <th>Total Amount</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <!-- Orders will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Order Details Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Order Details</h2>
+            <div id="orderDetails">
+                <!-- Order details will be loaded here -->
+            </div>
+            <div class="status-update">
+                <h3>Update Status</h3>
+                <select id="updateStatus">
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                <button onclick="updateOrderStatus()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Handmade Treasures. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample orders data
+        let orders = JSON.parse(localStorage.getItem('orders')) || [
+            {
+                id: 1,
+                customerId: 1,
+                customerName: "John Doe",
+                products: [
+                    { id: 1, name: "Handmade Ceramic Vase", price: 1499, quantity: 1 },
+                    { id: 2, name: "Handwoven Silk Scarf", price: 2499, quantity: 2 }
+                ],
+                total: 6497,
+                date: "2024-01-15",
+                status: "delivered"
+            },
+            {
+                id: 2,
+                customerId: 2,
+                customerName: "Jane Smith",
+                products: [
+                    { id: 3, name: "Brass Door Knocker", price: 1999, quantity: 1 }
+                ],
+                total: 1999,
+                date: "2024-01-16",
+                status: "pending"
+            }
+        ];
+
+        function renderOrders() {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+
+            orders.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>#${order.id}</td>
+                    <td>${order.customerName}</td>
+                    <td>${order.products.length} items</td>
+                    <td>₹${order.total.toLocaleString('en-IN')}</td>
+                    <td>${new Date(order.date).toLocaleDateString()}</td>
+                    <td><span class="status-badge ${order.status}">${order.status}</span></td>
+                    <td>
+                        <button onclick="viewOrder(${order.id})" class="edit-btn">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function viewOrder(id) {
+            const order = orders.find(o => o.id === id);
+            if (order) {
+                const modal = document.getElementById('orderModal');
+                const details = document.getElementById('orderDetails');
+                details.innerHTML = `
+                    <div class="order-info">
+                        <p><strong>Order ID:</strong> #${order.id}</p>
+                        <p><strong>Customer:</strong> ${order.customerName}</p>
+                        <p><strong>Date:</strong> ${new Date(order.date).toLocaleDateString()}</p>
+                        <p><strong>Status:</strong> <span class="status-badge ${order.status}">${order.status}</span></p>
+                    </div>
+                    <div class="order-products">
+                        <h3>Products</h3>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${order.products.map(product => `
+                                    <tr>
+                                        <td>${product.name}</td>
+                                        <td>${product.quantity}</td>
+                                        <td>₹${product.price.toLocaleString('en-IN')}</td>
+                                        <td>₹${(product.price * product.quantity).toLocaleString('en-IN')}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3"><strong>Total</strong></td>
+                                    <td><strong>₹${order.total.toLocaleString('en-IN')}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                `;
+                document.getElementById('updateStatus').value = order.status;
+                document.getElementById('updateStatus').dataset.orderId = order.id;
+                modal.style.display = 'block';
+            }
+        }
+
+        function updateOrderStatus() {
+            const select = document.getElementById('updateStatus');
+            const orderId = Number(select.dataset.orderId);
+            const newStatus = select.value;
+
+            orders = orders.map(order => {
+                if (order.id === orderId) {
+                    return { ...order, status: newStatus };
+                }
+                return order;
+            });
+
+            localStorage.setItem('orders', JSON.stringify(orders));
+            document.getElementById('orderModal').style.display = 'none';
+            renderOrders();
+        }
+
+        // Search and filter functionality
+        document.getElementById('searchOrders').addEventListener('input', filterOrders);
+        document.getElementById('statusFilter').addEventListener('change', filterOrders);
+
+        function filterOrders() {
+            const searchTerm = document.getElementById('searchOrders').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+
+            const filtered = orders.filter(order => {
+                const matchesSearch = order.customerName.toLowerCase().includes(searchTerm) ||
+                                   order.id.toString().includes(searchTerm);
+                const matchesStatus = !status || order.status === status;
+                return matchesSearch && matchesStatus;
+            });
+
+            renderFilteredOrders(filtered);
+        }
+
+        function renderFilteredOrders(filtered) {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+
+            filtered.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>#${order.id}</td>
+                    <td>${order.customerName}</td>
+                    <td>${order.products.length} items</td>
+                    <td>₹${order.total.toLocaleString('en-IN')}</td>
+                    <td>${new Date(order.date).toLocaleDateString()}</td>
+                    <td><span class="status-badge ${order.status}">${order.status}</span></td>
+                    <td>
+                        <button onclick="viewOrder(${order.id})" class="edit-btn">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Close modal functionality
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        // Initialize
+        renderOrders();
+    </script>
+</body>
+</html> 

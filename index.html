@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handmade Treasures</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>Handmade Treasures</h1>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search" placeholder="Search products...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="nav-links">
+                <a href="#" id="loginBtn">Login</a>
+                <a href="#" id="signupBtn">Sign Up</a>
+                <a href="#" id="favoritesBtn">
+                    <i class="fas fa-heart"></i> 
+                    Favorites
+                    <span id="favCount" class="count-badge" style="display: none;">0</span>
+                </a>
+                <a href="#" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i> 
+                    Cart
+                    <span id="cartCount" class="count-badge" style="display: none;">0</span>
+                </a>
+                <div class="user-section" style="display: none;">
+                    <span id="userDisplayName"></span>
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="filters">
+            <h3>Filter Products</h3>
+            <div class="filter-options">
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="jewelry">Jewelry</option>
+                    <option value="pottery">Pottery</option>
+                    <option value="textiles">Textiles</option>
+                    <option value="woodwork">Woodwork</option>
+                </select>
+                <select id="priceFilter">
+                    <option value="">Price Range</option>
+                    <option value="0-500">Under ₹500</option>
+                    <option value="500-1000">₹500 - ₹1000</option>
+                    <option value="1000-2000">₹1000 - ₹2000</option>
+                    <option value="2000+">Above ₹2000</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="products-grid" id="productsContainer">
+            <!-- Products will be dynamically loaded here -->
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <select name="userType" id="userType">
+                    <option value="user">User</option>
+                    <option value="seller">Seller</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-signup">&times;</span>
+            <h2>Sign Up</h2>
+            <form id="signupForm">
+                <select name="userType" id="signupUserType">
+                    <option value="user">User</option>
+                    <option value="seller">Seller</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+                <div id="adminKeyField" style="display: none;">
+                    <input type="password" id="adminKey" placeholder="Admin Secret Key" required>
+                    <small class="hint">Enter admin secret key provided by system</small>
+                </div>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close-cart">&times;</span>
+            <h2>Shopping Cart</h2>
+            <div id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="cart-total">
+                <h3>Total: ₹<span id="cartTotal">0.00</span></h3>
+                <button id="checkoutBtn" class="checkout-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Handmade Treasures. All rights reserved.</p>
+    </footer>
+
+    <script src="./main.js"></script>
+    <script src="./auth.js"></script>
+</body>
+</html> 

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - Handmade Treasures</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>Handmade Treasures</h1>
+            </div>
+            <div class="nav-links">
+                <a href="./dashboard.html">Dashboard</a>
+                <span id="userDisplayName">👑 Admin</span>
+                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="admin-content">
+        <div class="admin-header">
+            <h2>Manage Users</h2>
+            <button class="add-btn" onclick="showAddUserModal()">
+                <i class="fas fa-plus"></i> Add New User
+            </button>
+        </div>
+
+        <div class="search-filter">
+            <input type="text" id="searchUsers" placeholder="Search users...">
+            <select id="userTypeFilter">
+                <option value="">All Types</option>
+                <option value="user">User</option>
+                <option value="seller">Seller</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Users will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Add/Edit User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Add New User</h2>
+            <form id="userForm">
+                <input type="hidden" id="userId">
+                <input type="text" id="userName" placeholder="Full Name" required>
+                <input type="email" id="userEmail" placeholder="Email" required>
+                <select id="userType" required>
+                    <option value="">Select User Type</option>
+                    <option value="user">User</option>
+                    <option value="seller">Seller</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <select id="userStatus" required>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+                <button type="submit">Save User</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Handmade Treasures. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample users data
+        let users = JSON.parse(localStorage.getItem('users')) || [
+            { id: 1, name: 'John Doe', email: 'john@example.com', type: 'user', status: 'active' },
+            { id: 2, name: 'Jane Smith', email: 'jane@example.com', type: 'seller', status: 'active' },
+            { id: 3, name: 'Admin User', email: 'admin@example.com', type: 'admin', status: 'active' }
+        ];
+
+        function renderUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.type}</td>
+                    <td><span class="status-badge ${user.status}">${user.status}</span></td>
+                    <td>
+                        <button onclick="editUser(${user.id})" class="edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteUser(${user.id})" class="delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showAddUserModal() {
+            document.getElementById('modalTitle').textContent = 'Add New User';
+            document.getElementById('userForm').reset();
+            document.getElementById('userId').value = '';
+            document.getElementById('userModal').style.display = 'block';
+        }
+
+        function editUser(id) {
+            const user = users.find(u => u.id === id);
+            if (user) {
+                document.getElementById('modalTitle').textContent = 'Edit User';
+                document.getElementById('userId').value = user.id;
+                document.getElementById('userName').value = user.name;
+                document.getElementById('userEmail').value = user.email;
+                document.getElementById('userType').value = user.type;
+                document.getElementById('userStatus').value = user.status;
+                document.getElementById('userModal').style.display = 'block';
+            }
+        }
+
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                users = users.filter(u => u.id !== id);
+                localStorage.setItem('users', JSON.stringify(users));
+                renderUsers();
+            }
+        }
+
+        // Form submission
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = {
+                id: document.getElementById('userId').value || Date.now(),
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                type: document.getElementById('userType').value,
+                status: document.getElementById('userStatus').value
+            };
+
+            if (formData.id) {
+                users = users.map(u => u.id === formData.id ? formData : u);
+            } else {
+                users.push(formData);
+            }
+
+            localStorage.setItem('users', JSON.stringify(users));
+            document.getElementById('userModal').style.display = 'none';
+            renderUsers();
+        });
+
+        // Search and filter functionality
+        document.getElementById('searchUsers').addEventListener('input', filterUsers);
+        document.getElementById('userTypeFilter').addEventListener('change', filterUsers);
+
+        function filterUsers() {
+            const searchTerm = document.getElementById('searchUsers').value.toLowerCase();
+            const userType = document.getElementById('userTypeFilter').value;
+
+            const filtered = users.filter(user => {
+                const matchesSearch = user.name.toLowerCase().includes(searchTerm) ||
+                                   user.email.toLowerCase().includes(searchTerm);
+                const matchesType = !userType || user.type === userType;
+                return matchesSearch && matchesType;
+            });
+
+            renderFilteredUsers(filtered);
+        }
+
+        function renderFilteredUsers(filtered) {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            filtered.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.type}</td>
+                    <td><span class="status-badge ${user.status}">${user.status}</span></td>
+                    <td>
+                        <button onclick="editUser(${user.id})" class="edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteUser(${user.id})" class="delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Close modal functionality
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+
+        // Initialize
+        renderUsers();
+    </script>
+</body>
+</html> 
