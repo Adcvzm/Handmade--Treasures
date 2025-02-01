@@ -5,7 +5,7 @@ const products = [
         name: "Handmade Ceramic Vase",
         category: "pottery",
         price: 1499,
-        image: "./assets/images/product1.jpg",
+        image: "./product1.jpg",
         description: "Beautiful hand-crafted ceramic vase with traditional design",
         seller: "CeramicArtistry"
     },
@@ -14,7 +14,7 @@ const products = [
         name: "Handwoven Silk Scarf",
         category: "textiles",
         price: 2499,
-        image: "./assets/images/product2.jpg",
+        image: "./product2.jpg",
         description: "Pure silk handwoven scarf with traditional patterns",
         seller: "SilkCrafts"
     },
@@ -23,7 +23,7 @@ const products = [
         name: "Brass Door Knocker",
         category: "metalwork",
         price: 1999,
-        image: "./assets/images/product3.jpg",
+        image: "./product3.jpg",
         description: "Handcrafted brass door knocker with intricate designs",
         seller: "MetalArtIndia"
     },
@@ -32,7 +32,7 @@ const products = [
         name: "Terracotta Wind Chimes",
         category: "pottery",
         price: 899,
-        image: "./assets/images/product4.jpg",
+        image: "./product4.jpg",
         description: "Handmade terracotta wind chimes with natural finish",
         seller: "EarthArtistry"
     },
@@ -41,7 +41,7 @@ const products = [
         name: "Embroidered Cushion Cover",
         category: "textiles",
         price: 799,
-        image: "./assets/images/product5.jpg",
+        image: "./product5.jpg",
         description: "Hand-embroidered cushion cover with traditional motifs",
         seller: "ThreadArt"
     },
@@ -50,7 +50,7 @@ const products = [
         name: "Wooden Tea Coaster Set",
         category: "woodwork",
         price: 599,
-        image: "./assets/images/product6.jpg",
+        image: "./product6.jpg",
         description: "Hand-carved wooden tea coaster set of 6",
         seller: "WoodCraftIndia"
     },
@@ -59,7 +59,7 @@ const products = [
         name: "Beaded Jewelry Set",
         category: "jewelry",
         price: 1299,
-        image: "./assets/images/product7.jpg",
+        image: "./product7.jpg",
         description: "Handcrafted beaded necklace and earring set",
         seller: "BeadArtistry"
     },
@@ -68,7 +68,7 @@ const products = [
         name: "Clay Diya Set",
         category: "pottery",
         price: 499,
-        image: "./assets/images/product8.jpg",
+        image: "./product8.jpg",
         description: "Set of 12 hand-painted clay diyas",
         seller: "ClayArtIndia"
     },
@@ -77,7 +77,7 @@ const products = [
         name: "Bamboo Table Lamp",
         category: "woodwork",
         price: 1799,
-        image: "./assets/images/product9.jpg",
+        image: "./product9.jpg",
         description: "Handwoven bamboo table lamp with natural finish",
         seller: "BambooArt"
     },
@@ -86,7 +86,7 @@ const products = [
         name: "Block Print Bedsheet",
         category: "textiles",
         price: 1999,
-        image: "./assets/images/product10.jpg",
+        image: "./product10.jpg",
         description: "Hand block printed cotton bedsheet with 2 pillow covers",
         seller: "BlockPrintStudio"
     },
@@ -95,7 +95,7 @@ const products = [
         name: "Brass Wall Clock",
         category: "metalwork",
         price: 2999,
-        image: "./assets/images/product11.jpg",
+        image: "./product11.jpg",
         description: "Handcrafted brass wall clock with antique finish",
         seller: "MetalArtIndia"
     },
@@ -104,7 +104,7 @@ const products = [
         name: "Macramé Plant Hanger",
         category: "textiles",
         price: 699,
-        image: "./assets/images/product12.jpg",
+        image: "./product12.jpg",
         description: "Handwoven macramé plant hanger with wooden beads",
         seller: "StringArt"
     },
@@ -113,7 +113,7 @@ const products = [
         name: "Ceramic Tea Set",
         category: "pottery",
         price: 2499,
-        image: "./assets/images/product13.jpg",
+        image: "./product13.jpg",
         description: "Handmade ceramic tea set with 6 cups and teapot",
         seller: "CeramicArtistry"
     },
@@ -122,7 +122,7 @@ const products = [
         name: "Wooden Photo Frame",
         category: "woodwork",
         price: 899,
-        image: "./assets/images/product14.jpg",
+        image: "./product14.jpg",
         description: "Hand-carved wooden photo frame with traditional design",
         seller: "WoodCraftIndia"
     },
@@ -131,7 +131,7 @@ const products = [
         name: "Silver Anklet Pair",
         category: "jewelry",
         price: 1599,
-        image: "./assets/images/product15.jpg",
+        image: "./product15.jpg",
         description: "Handcrafted silver anklets with bells",
         seller: "SilverArt"
     },
@@ -140,7 +140,7 @@ const products = [
         name: "Jute Wall Hanging",
         category: "textiles",
         price: 999,
-        image: "./assets/images/product16.jpg",
+        image: "./product16.jpg",
         description: "Handwoven jute wall hanging with tassels",
         seller: "JuteCrafts"
     },
@@ -149,7 +149,7 @@ const products = [
         name: "Copper Water Bottle",
         category: "metalwork",
         price: 1299,
-        image: "./assets/images/product17.jpg",
+        image: "./product17.jpg",
         description: "Handcrafted copper water bottle with traditional design",
         seller: "CopperArt"
     },
@@ -158,7 +158,7 @@ const products = [
         name: "Clay Wind Bell",
         category: "pottery",
         price: 699,
-        image: "./assets/images/product18.jpg",
+        image: "./product18.jpg",
         description: "Handmade clay wind bell with natural colors",
         seller: "ClayArtIndia"
     },
@@ -167,7 +167,7 @@ const products = [
         name: "Wooden Spice Box",
         category: "woodwork",
         price: 1499,
-        image: "./assets/images/product19.jpg",
+        image: "./product19.jpg",
         description: "Hand-carved wooden spice box with 8 compartments",
         seller: "WoodCraftIndia"
     },
@@ -176,7 +176,7 @@ const products = [
         name: "Silk Thread Bangles",
         category: "jewelry",
         price: 499,
-        image: "./assets/images/product20.jpg",
+        image: "./product20.jpg",
         description: "Set of 6 handmade silk thread bangles",
         seller: "ThreadArt"
     }
